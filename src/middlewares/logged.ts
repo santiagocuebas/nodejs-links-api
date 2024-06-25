@@ -5,7 +5,7 @@ import { User } from '../models/index.js';
 
 export const isLoggedIn: Direction = async (req, res, next) => {
 	try {
-		const token = String(req.headers['Authorization']);
+		const token = String(req.headers.authorization);
 		const decoded = jwt.verify(token, SECRET) as jwt.JwtPayload;
 		const user = await User.findOneBy({ id: decoded.id });
 
@@ -20,7 +20,7 @@ export const isLoggedIn: Direction = async (req, res, next) => {
 
 export const isNotLoggedIn: Direction = async (req, res, next) => {
 	try {
-		const token = String(req.headers['Authorization']);
+		const token = String(req.headers.authorization);
 		const decoded = jwt.verify(token, SECRET) as jwt.JwtPayload;
 		const user = await User.findOneBy({ id: decoded.id });
 		

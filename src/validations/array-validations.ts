@@ -9,16 +9,16 @@ import {
 
 export const arrayLink = [
 	body('title', 'Invalid title')
-		.exists({ checkFalsy: true }).bail()
+		.exists({ values: 'falsy' }).bail()
 		.isString().bail()
-		.isLength({ min: 5, max: 60 })
+		.isLength({ max: 60 })
 		.customSanitizer((value: string) => {
 			const firstLetter = value.at(0) as string;
 			return value.replace(firstLetter, firstLetter.toUpperCase());
 		})
 		.custom(isValidTitle),
 	body('url', 'Invalid url')
-		.exists({ checkFalsy: true }).bail()
+		.exists({ values: 'falsy' }).bail()
 		.isURL().bail()
 		.isLength({ max: 255 })
 		.custom(isValidURL),
@@ -29,10 +29,10 @@ export const arrayLink = [
 
 export const arrayEditLink = [
 	param('id')
-		.exists({ checkFalsy: true }).bail()
+		.exists({ values: 'falsy' }).bail()
 		.custom(isValidLink),
 	body('title', 'Invalid title')
-		.exists({ checkFalsy: true }).bail()
+		.exists({ values: 'falsy' }).bail()
 		.isString().bail()
 		.isLength({ min: 5, max: 60 })
 		.customSanitizer((value: string) => {
@@ -41,7 +41,7 @@ export const arrayEditLink = [
 		})
 		.custom(isValidTitleEdit),
 	body('url', 'Invalid url')
-		.exists({ checkFalsy: true }).bail()
+		.exists({ values: 'falsy' }).bail()
 		.isURL().bail()
 		.isLength({ max: 255 })
 		.custom(isValidURLEdit),
