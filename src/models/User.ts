@@ -15,14 +15,11 @@ export class User extends BaseEntity implements IUser {
 	@Column('varchar')
 	public username!: string;
 
-	@Column('varchar', { nullable: false })
+	@Column('varchar', { unique: true })
 	public email!: string;
 
-	@Column({ nullable: true })
-	public githubId!: number;
-
-	@Column('varchar', { nullable: true })
-	public googleId!: string;
+	@Column('varchar')
+	public password!: string;
 
 	@CreateDateColumn()
 	public createdAt!: Date;

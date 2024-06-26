@@ -4,8 +4,23 @@ import {
 	isValidTitle,
 	isValidURL,
 	isValidTitleEdit,
-	isValidURLEdit
+	isValidURLEdit,
+	isValidPassword
 } from './custom-validators.js';
+
+export const arrayRegister = [
+	body('email', 'Invalid email')
+		.exists({ values: 'falsy' }).bail()
+		.isEmail().normalizeEmail().bail()
+		.isLength({ max: 100 }).bail(),
+	body('password', 'Invalid password')
+		.exists({ values: 'falsy' }).bail()
+		.isStrongPassword().withMessage('Password must contains a number, a lower letter, a upper letter and a special character').bail()
+		.isLength({ max: 40 }).bail()
+		.custom(isValidPassword),
+	body('confirmPassword', 'Password not match')
+		.custom((value, { req }) => value !== req.body.password)
+];
 
 export const arrayLink = [
 	body('title', 'Invalid title')

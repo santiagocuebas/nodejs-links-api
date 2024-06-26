@@ -7,8 +7,12 @@ export const SECRET = process.env.SECRET as string;
 
 export const ORIGIN = process.env.ORIGIN;
 
-export const DB_URI = process.env.DB_URI;
+export const DB_HOST = process.env.DB_HOST;
 
-export const GITHUB_URI = process.env.GITHUB_URI;
+export const DB_PORT = process.env.DB_PORT;
 
-export const GOOGLE_URI = process.env.GOOGLE_URI + `&redirect_uri=${ORIGIN}/register?type=google&code=`;
+export const DB_USER = process.env.DB_USER;
+
+export const DB_PASS = process.env.DB_PASS;
+
+export const DB_DATABASE = process.env.DB_DATABASE;

@@ -1,78 +1,28 @@
-import type {
-	Direction,
-	IEmailData,
-	IGithubData,
-	IGithubUser,
-	IKeys
-} from '../global.js';
-import axios from 'axios';
+import type { Direction } from '../global.js';
 import jwt from 'jsonwebtoken';
-import { GITHUB_URI, GOOGLE_URI } from '../config.js';
-import { findOrCreateUser } from '../libs/index.js';
+import { SECRET } from '../config.js';
+import { encryptPassword, getId } from '../libs/index.js';
+import { User } from '../models/index.js';
 
-export const postGoogle: Direction = async (req, res) => {
+export const postRegister: Direction = async (req, res) => {
 	try {
-		const data: IKeys<string> = await axios({
-			method: 'POST',
-			url: GOOGLE_URI + `${req.query.code}`
-		}).then(res => res.data);
+		let user = await User.findOneBy({ email: req.body.email });
 
-		const decodedToken = jwt.decode(data.id_token, { json: true });
-
-		if (decodedToken === null) throw undefined;
-
-		const patchedData = {
-			googleId: `${decodedToken.sub}`,
-			username: decodedToken.email.split('@')[0],
-			email: decodedToken.email
-		};
-
-		const resData = await findOrCreateUser(patchedData,
-			{ googleId: decodedToken.sub });
-
-		return res.json(resData);
-	} catch {
-		return res.status(401).json({
-			error: 'An error occurred while trying to register the user'
-		});
-	}
-};
-
-export const postGithub: Direction = async (req, res) => {
-	try {
-		const data: IKeys<string> = await axios({
-			method: 'POST',
-			url: GITHUB_URI + `${req.query.code}`,
-			headers: { Accept: 'application/json' }
-		}).then(res => res.data);
-
-		axios.defaults.headers.common.Authorization = `${data.token_type} ${data.access_token}`;
-		
-		const githubData: IGithubData = await axios({
-			url: 'https://api.github.com/user'
-		}).then(res => res.data);
-
-		if (githubData.email === null) {
-			const emailData: IEmailData[] = await axios({
-				url: 'https://api.github.com/user/emails'
-			}).then(res => res.data);
-
-			const primaryEmail = emailData.find(email => email.primary === true);
-
-			if (!primaryEmail) throw undefined;
-
-			githubData.email = primaryEmail.email;
+		if (user === null) {
+			user = await User.create({
+				id: await getId('User', 16),
+				username: req.body.email.split('@')[0],
+				email: req.body.email,
+				password: await encryptPassword(req.body.password)
+			}).save();
 		}
-		
-		const patchedData: IGithubUser = {
-			githubId: githubData.id,
-			username: githubData.login,
-			email: githubData.email
-		};
 
-		const resData = await findOrCreateUser(patchedData, { githubId: githubData.id });
-			
-		return res.json(resData);
+		const token = jwt.sign({
+			id: user.id,
+			exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 15
+		}, SECRET);
+
+		return res.json({ user, token });
 	} catch {
 		return res.status(401).json({
 			error: 'An error occurred while trying to register the user'

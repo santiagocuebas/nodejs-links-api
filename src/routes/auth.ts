@@ -1,13 +1,16 @@
 import { Router } from 'express';
 import { isNotLoggedIn } from '../middlewares/logged.js';
 import { authCTRL } from '../controllers/index.js';
+import { validate } from '../middlewares/validation.js';
+import { arrayRegister } from '../validations/array-validations.js';
 
 const router = Router();
 
-router.use(isNotLoggedIn);
-
-router.post('/googleRegister', authCTRL.postGoogle);
-
-router.post('/githubRegister', authCTRL.postGithub);
+router.post(
+  '/register',
+  isNotLoggedIn,
+  validate(arrayRegister),
+  authCTRL.postRegister
+);
 
 export default router;

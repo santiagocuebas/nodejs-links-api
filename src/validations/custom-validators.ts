@@ -1,5 +1,18 @@
 import type { CustomValidator } from 'express-validator';
-import { Link } from '../models/index.js';
+import { matchPassword } from '../libs/index.js';
+import { Link, User } from '../models/index.js';
+
+export const isValidPassword: CustomValidator = async (value: string, { req }) => {
+	const user = await User.findOneBy({ email: req.body.email });
+
+	if (user !== null) {
+		const match = await matchPassword(value, user.password);
+
+		if (!match) throw new Error('Password not match');
+	}
+
+	return true;
+};
 
 export const isValidTitle: CustomValidator = async (title: string, { req }) => {
 	const link = await Link.findOneBy({ title, authorId: req.user.id });

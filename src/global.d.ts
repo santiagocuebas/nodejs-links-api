@@ -19,31 +19,10 @@ export interface IKeys<T> {
 	[index: string]: T;
 }
 
-export interface IGithubData {
-	id: number;
-	login: string;
-	email: string | null;
-}
-
-export interface IEmailData {
-	email: string;
-	primary: boolean;
-	verified: boolean;
-	visibility: string | null;
-}
-
-export interface IGithubUser {
-	githubId: number;
-	username: string;
-	email: string;
-}
-
 export interface IUser {
 	id: string;
 	username: string;
 	email: string;
-	githubId: number;
-	googleId: string;
 	createdAt: Date;
 }
 
