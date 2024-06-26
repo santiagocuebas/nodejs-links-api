@@ -8,9 +8,10 @@
     "node": "16.x"
   },
   "scripts": {
-    "start": "node src/index.js",
+    "start": "node build/index.js",
     "dev": "nodemon src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "todo": "pnpm install && pnpm run build && pnpm start"
   },
   "keywords": [],
   "author": "",
