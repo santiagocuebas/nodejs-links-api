@@ -1,13 +1,13 @@
 import { Router } from 'express';
-import { isNotLoggedIn } from '../middlewares/logged.js';
+import { isLoggedIn, isNotLoggedIn } from '../middlewares/logged.js';
 import { authCTRL } from '../controllers/index.js';
 
 const router = Router();
 
-router.use(isNotLoggedIn);
+router.get('/userData', isLoggedIn, authCTRL.getUserData);
 
-router.post('/googleRegister', authCTRL.postGoogle);
+router.post('/googleRegister', isNotLoggedIn, authCTRL.postGoogle);
 
-router.post('/githubRegister', authCTRL.postGithub);
+router.post('/githubRegister', isNotLoggedIn, authCTRL.postGithub);
 
 export default router;

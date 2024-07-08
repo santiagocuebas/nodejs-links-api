@@ -10,6 +10,10 @@ import jwt from 'jsonwebtoken';
 import { GITHUB_URI, GOOGLE_URI } from '../config.js';
 import { findOrCreateUser } from '../libs/index.js';
 
+export const getUserData: Direction = async (req, res) => {
+	return res.json({ user: req.user, token: req.headers.authorization });
+};
+
 export const postGoogle: Direction = async (req, res) => {
 	try {
 		const data: IKeys<string> = await axios({

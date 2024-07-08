@@ -6,7 +6,7 @@ const router = Router();
 
 router.use(isLoggedIn);
 
-router.get('/userData', userCTRL.getUserData);
+router.get('/links', userCTRL.getLinks);
 
 router.delete('/delete', userCTRL.deleteUser);
 

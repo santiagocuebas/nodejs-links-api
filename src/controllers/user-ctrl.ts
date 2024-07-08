@@ -1,7 +1,7 @@
 import type { Direction } from '../global.js';
 import { Link, User } from '../models/index.js';
 
-export const getUserData: Direction = async (req, res) => {
+export const getLinks: Direction = async (req, res) => {
 	const links = await Link
 		.find({
 			where: { authorId: req.user.id },
@@ -9,7 +9,7 @@ export const getUserData: Direction = async (req, res) => {
 		})
 		.catch(() => []);
 		
-	return res.json({ user: req.user, token: req.headers.authorization, links });
+	return res.json(links);
 };
 
 export const deleteUser: Direction = async (req, res) => {
